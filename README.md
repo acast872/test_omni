@@ -15,13 +15,14 @@ Then visit `http://localhost:8000`.
 ## What works
 
 - Create listings with brand, category, size, condition, price, and marketplace selections.
+- Prepare copy-ready listing text and open the selected marketplace's manual listing page.
 - Save active listings or keep them as drafts.
 - Search, sort, and filter the closet; update listings between active, draft, and sold.
 - See listing, asking-price, and sold-item totals.
 - Persist changes in this browser using `localStorage`.
 - Responsive layout for desktop and mobile screens.
 
-The initial closet is sample content for preview. This MVP does not connect to eBay, Poshmark, Depop, or Mercari APIs and does not publish listings to those services. Marketplace selection is organizational only. Data stays in the current browser and is not synced between devices.
+The initial closet is sample content for preview. Assisted publishing copies your listing details and opens the marketplace listing page for eBay, Poshmark, Depop, or Mercari. You must sign in, upload photos, review the form, and submit it yourself; Threadline cannot verify that a marketplace accepted a listing. It does not use marketplace APIs. Data stays in the current browser and is not synced between devices.
 
 ## Reset sample data
 

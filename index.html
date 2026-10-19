@@ -55,7 +55,7 @@
           <div class="panel-heading"><div><div class="section-kicker">YOUR CLOSET</div><h2 id="list-heading">Recent listings</h2></div><button class="text-button" id="view-all">View all listings <span>→</span></button></div>
           <div class="toolbar"><label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Search your closet..." aria-label="Search listings"></label><div class="toolbar-right"><select id="sort-select" aria-label="Sort listings"><option value="recent">Recently added</option><option value="price-high">Price: high to low</option><option value="price-low">Price: low to high</option><option value="name">Name: A to Z</option></select><button class="filter-button" id="filter-button">☷ <span>Filter</span></button></div></div>
           <div class="filter-row" id="filter-row" hidden><button class="filter-chip selected" data-filter="all">All items</button><button class="filter-chip" data-filter="active">Active</button><button class="filter-chip" data-filter="draft">Drafts</button><button class="filter-chip" data-filter="sold">Sold</button></div>
-          <div class="table-wrap"><table><thead><tr><th class="item-heading">ITEM</th><th>STATUS</th><th>LISTED ON</th><th>PRICE</th><th></th></tr></thead><tbody id="listing-rows"></tbody></table><div class="empty-state" id="empty-state" hidden><div class="empty-art">✳</div><h3>Your closet starts here</h3><p>Add your first item and get it ready to list across your favorite marketplaces.</p><button class="button button-primary" id="empty-add">＋ Create your first listing</button></div></div>
+          <div class="table-wrap"><table><thead><tr><th class="item-heading">ITEM</th><th>STATUS</th><th>CHANNELS</th><th>PRICE</th><th></th></tr></thead><tbody id="listing-rows"></tbody></table><div class="empty-state" id="empty-state" hidden><div class="empty-art">✳</div><h3>Your closet starts here</h3><p>Add your first item and get it ready to list across your favorite marketplaces.</p><button class="button button-primary" id="empty-add">＋ Create your first listing</button></div></div>
           <div class="table-footer"><span id="result-count">Showing 0 items</span><span class="footer-tip"><span>✦</span> Good photos help your listings sell faster</span></div>
         </section>
         <footer class="page-footer">Made for the love of a second life <span>✳</span></footer>
@@ -70,10 +70,21 @@
         <label class="field-label">What are you selling?<input name="title" required maxlength="90" placeholder="e.g. Vintage leather jacket"></label>
         <div class="form-grid"><label class="field-label">Brand<input name="brand" maxlength="50" placeholder="e.g. Levi's"></label><label class="field-label">Category<select name="category"><option>Clothing</option><option>Shoes</option><option>Bags</option><option>Accessories</option><option>Home</option><option>Other</option></select></label></div>
         <div class="form-grid"><label class="field-label">Size<input name="size" maxlength="24" placeholder="e.g. M, 8, One size"></label><label class="field-label">Condition<select name="condition"><option>Like new</option><option>New with tags</option><option>Good</option><option>Fair</option></select></label></div>
+        <label class="field-label">Description<textarea name="description" maxlength="500" rows="3" placeholder="Add details about fit, fabric, color, or anything buyers should know."></textarea></label>
         <label class="field-label">Price<input name="price" required type="number" min="0.01" step="0.01" placeholder="0.00"><span class="field-hint">Set your asking price in USD.</span></label>
         <fieldset class="channel-picker"><legend>Prepare for marketplaces</legend><p>Choose where you plan to list this item.</p><div class="channel-options"><label><input type="checkbox" name="channels" value="eBay" checked><span class="channel-dot ebay">e</span> eBay</label><label><input type="checkbox" name="channels" value="Poshmark" checked><span class="channel-dot posh">P</span> Poshmark</label><label><input type="checkbox" name="channels" value="Depop"><span class="channel-dot depop">d</span> Depop</label><label><input type="checkbox" name="channels" value="Mercari"><span class="channel-dot mercari">m</span> Mercari</label></div></fieldset>
         <div class="modal-footer"><button class="button button-quiet" type="button" id="save-draft">Save as draft</button><button class="button button-primary" type="submit">Save listing <span>→</span></button></div>
       </form>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="publish-backdrop" hidden>
+    <section class="modal publish-modal" role="dialog" aria-modal="true" aria-labelledby="publish-title">
+      <div class="modal-header"><div><div class="section-kicker">MANUAL MARKETPLACE HANDOFF</div><h2 id="publish-title">Prepare your listing</h2></div><button class="close-button" id="close-publish" aria-label="Close">×</button></div>
+      <p class="publish-item-name" id="publish-item-name"></p>
+      <label class="field-label">Choose a marketplace<select id="publish-marketplace"></select></label>
+      <label class="field-label">Copy-ready listing text<textarea id="publish-text" rows="8" readonly></textarea></label>
+      <div class="publish-note"><span>✳</span><span>We’ll open the marketplace in a new tab. You’ll need to sign in, add photos, review the details, and submit the listing there.</span></div>
+      <div class="modal-footer publish-footer"><button class="button button-quiet" id="copy-publish-text" type="button">Copy listing text</button><button class="button button-primary" id="open-marketplace" type="button">Open marketplace <span>↗</span></button></div>
     </section>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

@@ -1,6 +1,12 @@
 const storageKey = 'threadline.listings.v1';
 const channelInitials = { eBay: 'e', Poshmark: 'P', Depop: 'd', Mercari: 'm' };
 const channelClasses = { eBay: 'ebay', Poshmark: 'posh', Depop: 'depop', Mercari: 'mercari' };
+const marketplaceUrls = {
+  eBay: 'https://www.ebay.com/sl/sell',
+  Poshmark: 'https://poshmark.com/create-listing',
+  Depop: 'https://www.depop.com/products/create/',
+  Mercari: 'https://www.mercari.com/sell/'
+};
 const seedListings = [
   { id: 'seed-1', title: 'Vintage leather trench coat', brand: 'Mango', category: 'Clothing', size: 'M', condition: 'Good', price: 86, channels: ['eBay', 'Poshmark'], status: 'active', icon: '🧥', tone: 'thumb-coat', created: 6 },
   { id: 'seed-2', title: 'Mini shoulder bag', brand: 'Coach', category: 'Bags', size: 'One size', condition: 'Like new', price: 112, channels: ['Poshmark', 'Depop', 'Mercari'], status: 'active', icon: '👜', tone: 'thumb-bag', created: 5 },
@@ -12,6 +18,7 @@ const seedListings = [
 let listings = loadListings();
 let currentFilter = 'all';
 let currentView = 'overview';
+let publishingListing = null;
 let toastTimer;
 
 const elements = {
@@ -22,6 +29,9 @@ const elements = {
   sort: document.querySelector('#sort-select'),
   form: document.querySelector('#listing-form'),
   backdrop: document.querySelector('#modal-backdrop'),
+  publishBackdrop: document.querySelector('#publish-backdrop'),
+  publishSelect: document.querySelector('#publish-marketplace'),
+  publishText: document.querySelector('#publish-text'),
   toast: document.querySelector('#toast'),
   filterRow: document.querySelector('#filter-row')
 };
@@ -74,10 +84,10 @@ function render() {
   elements.rows.innerHTML = visibleListings.map(item => `
     <tr>
       <td><div class="item-cell"><span class="item-thumb ${escapeHtml(item.tone || 'thumb-coat')}">${escapeHtml(item.icon || '✳')}</span><span class="item-meta"><span class="item-name">${escapeHtml(item.title)}</span><span class="item-sub">${escapeHtml(item.brand || item.category)}${item.size ? ` · ${escapeHtml(item.size)}` : ''}</span></span></div></td>
-      <td><span class="status-pill status-${escapeHtml(item.status)}">${item.status === 'active' ? 'Active' : item.status === 'draft' ? 'Draft' : 'Sold'}</span></td>
+      <td><button type="button" class="status-pill status-${escapeHtml(item.status)} status-toggle" data-action="${item.status === 'draft' ? 'activate' : item.status === 'active' ? 'sold' : 'relist'}" data-id="${escapeHtml(item.id)}" aria-label="${item.status === 'draft' ? 'Mark active' : item.status === 'active' ? 'Mark sold' : 'Relist'} ${escapeHtml(item.title)}">${item.status === 'active' ? 'Active' : item.status === 'draft' ? 'Draft' : 'Sold'}</button></td>
       <td><span class="market-tags">${item.channels.map(channel => `<span class="market-tag ${channelClasses[channel] || ''}" title="${escapeHtml(channel)}">${channelInitials[channel] || '?'}</span>`).join('')}</span></td>
       <td class="price-cell">${money(item.price)}</td>
-      <td><button class="row-actions" data-action="${item.status === 'draft' ? 'activate' : item.status === 'active' ? 'sold' : 'relist'}" data-id="${escapeHtml(item.id)}" aria-label="${item.status === 'draft' ? 'Mark active' : item.status === 'active' ? 'Mark sold' : 'Relist'} ${escapeHtml(item.title)}">···</button></td>
+      <td><button type="button" class="prepare-button" data-action="prepare" data-id="${escapeHtml(item.id)}">Prepare ↗</button></td>
     </tr>`).join('');
   elements.empty.hidden = visibleListings.length > 0;
   elements.count.textContent = `Showing ${visibleListings.length} ${visibleListings.length === 1 ? 'item' : 'items'}`;
@@ -122,6 +132,7 @@ function createListing(status) {
     category: formData.get('category'),
     size: formData.get('size').trim(),
     condition: formData.get('condition'),
+    description: formData.get('description').trim(),
     price: Number(formData.get('price')),
     channels,
     status,
@@ -153,6 +164,49 @@ function setView(view) {
   document.querySelector('#sidebar').classList.remove('open');
 }
 
+function listingText(item) {
+  const attributes = [item.brand, item.category, item.size ? `Size ${item.size}` : '', item.condition].filter(Boolean).join(' · ');
+  const details = item.description || `${item.title}${item.brand ? ` by ${item.brand}` : ''}. ${item.condition} condition${item.size ? `, size ${item.size}` : ''}.`;
+  return `${item.title}\n${attributes}\n\n${details}\n\nPrice: ${money(item.price)}`;
+}
+
+function updatePublishText() {
+  if (publishingListing) elements.publishText.value = listingText(publishingListing);
+  const marketplace = elements.publishSelect.value;
+  document.querySelector('#open-marketplace').innerHTML = `Open ${escapeHtml(marketplace || 'marketplace')} <span>↗</span>`;
+}
+
+function openPublishModal(item) {
+  publishingListing = item;
+  const availableChannels = item.channels.length ? item.channels : Object.keys(marketplaceUrls);
+  elements.publishSelect.innerHTML = availableChannels.map(channel => `<option value="${escapeHtml(channel)}">${escapeHtml(channel)}</option>`).join('');
+  document.querySelector('#publish-item-name').textContent = item.title;
+  updatePublishText();
+  elements.publishBackdrop.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closePublishModal() {
+  elements.publishBackdrop.hidden = true;
+  document.body.style.overflow = '';
+  publishingListing = null;
+}
+
+async function copyPublishText() {
+  if (!publishingListing) return;
+  try {
+    await navigator.clipboard.writeText(elements.publishText.value);
+  } catch {
+    elements.publishText.focus();
+    elements.publishText.select();
+    if (!document.execCommand('copy')) {
+      showToast('Copy was blocked. Select the text and copy it manually.');
+      return;
+    }
+  }
+  showToast('Listing text copied. Paste it into the marketplace form.');
+}
+
 document.querySelectorAll('.nav-item').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
 document.querySelector('#add-listing').addEventListener('click', openModal);
 document.querySelector('#add-listing-top').addEventListener('click', openModal);
@@ -175,12 +229,30 @@ elements.rows.addEventListener('click', event => {
   const item = listings.find(listing => listing.id === button.dataset.id);
   if (!item) return;
   const action = button.dataset.action;
+  if (action === 'prepare') {
+    openPublishModal(item);
+    return;
+  }
   item.status = action === 'activate' ? 'active' : action === 'sold' ? 'sold' : 'active';
   persist();
   render();
   showToast(action === 'sold' ? 'Marked as sold. Nice one!' : action === 'relist' ? 'Moved back to active listings.' : 'Listing is now active.');
 });
+elements.publishSelect.addEventListener('change', updatePublishText);
+document.querySelector('#close-publish').addEventListener('click', closePublishModal);
+document.querySelector('#copy-publish-text').addEventListener('click', copyPublishText);
+document.querySelector('#open-marketplace').addEventListener('click', () => {
+  const url = marketplaceUrls[elements.publishSelect.value];
+  if (!url) return;
+  window.open(url, '_blank', 'noopener,noreferrer');
+  showToast(`Opened ${elements.publishSelect.value}. Finish and submit the listing there.`);
+});
 document.querySelector('#mobile-menu').addEventListener('click', () => document.querySelector('#sidebar').classList.toggle('open'));
 elements.backdrop.addEventListener('click', event => { if (event.target === elements.backdrop) closeModal(); });
-document.addEventListener('keydown', event => { if (event.key === 'Escape' && !elements.backdrop.hidden) closeModal(); });
+elements.publishBackdrop.addEventListener('click', event => { if (event.target === elements.publishBackdrop) closePublishModal(); });
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape') return;
+  if (!elements.backdrop.hidden) closeModal();
+  if (!elements.publishBackdrop.hidden) closePublishModal();
+});
 render();
