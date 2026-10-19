@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f7f4">
-  <title>Threadline — Your resale studio</title>
+  <title>ListNexus — AI resale listing studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 <body>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <a class="brand" href="#" aria-label="Threadline home"><span class="brand-mark">t<span>·</span></span><span>threadline</span></a>
+      <a class="brand" href="#" aria-label="ListNexus home"><span class="brand-mark">L<span>N</span></span><span>ListNexus</span></a>
       <div class="workspace-label">WORKSPACE</div>
       <nav class="main-nav" aria-label="Main navigation">
         <button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span>Overview</button>
@@ -71,6 +71,7 @@
         <div class="form-grid"><label class="field-label">Brand<input name="brand" maxlength="50" placeholder="e.g. Levi's"></label><label class="field-label">Category<select name="category"><option>Clothing</option><option>Shoes</option><option>Bags</option><option>Accessories</option><option>Home</option><option>Other</option></select></label></div>
         <div class="form-grid"><label class="field-label">Size<input name="size" maxlength="24" placeholder="e.g. M, 8, One size"></label><label class="field-label">Condition<select name="condition"><option>Like new</option><option>New with tags</option><option>Good</option><option>Fair</option></select></label></div>
         <label class="field-label">Description<textarea name="description" maxlength="500" rows="3" placeholder="Add details about fit, fabric, color, or anything buyers should know."></textarea></label>
+        <div class="ai-assist-row"><button class="button button-ai" id="ai-assist" type="button"><span>✦</span> Improve with AI</button><span class="ai-status" id="ai-status" aria-live="polite">Gemini drafts; you stay in control.</span></div>
         <label class="field-label">Price<input name="price" required type="number" min="0.01" step="0.01" placeholder="0.00"><span class="field-hint">Set your asking price in USD.</span></label>
         <fieldset class="channel-picker"><legend>Prepare for marketplaces</legend><p>Choose where you plan to list this item.</p><div class="channel-options"><label><input type="checkbox" name="channels" value="eBay" checked><span class="channel-dot ebay">e</span> eBay</label><label><input type="checkbox" name="channels" value="Poshmark" checked><span class="channel-dot posh">P</span> Poshmark</label><label><input type="checkbox" name="channels" value="Depop"><span class="channel-dot depop">d</span> Depop</label><label><input type="checkbox" name="channels" value="Mercari"><span class="channel-dot mercari">m</span> Mercari</label></div></fieldset>
         <div class="modal-footer"><button class="button button-quiet" type="button" id="save-draft">Save as draft</button><button class="button button-primary" type="submit">Save listing <span>→</span></button></div>

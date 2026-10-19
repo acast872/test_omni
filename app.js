@@ -1,4 +1,5 @@
-const storageKey = 'threadline.listings.v1';
+const storageKey = 'listnexus.listings.v1';
+const legacyStorageKey = 'threadline.listings.v1';
 const channelInitials = { eBay: 'e', Poshmark: 'P', Depop: 'd', Mercari: 'm' };
 const channelClasses = { eBay: 'ebay', Poshmark: 'posh', Depop: 'depop', Mercari: 'mercari' };
 const marketplaceUrls = {
@@ -38,7 +39,7 @@ const elements = {
 
 function loadListings() {
   try {
-    const saved = localStorage.getItem(storageKey);
+    const saved = localStorage.getItem(storageKey) || localStorage.getItem(legacyStorageKey);
     return saved ? JSON.parse(saved) : seedListings;
   } catch {
     return seedListings;
@@ -215,6 +216,39 @@ document.querySelector('#close-modal').addEventListener('click', closeModal);
 document.querySelector('#view-all').addEventListener('click', () => setView('listings'));
 document.querySelector('#save-draft').addEventListener('click', () => createListing('draft'));
 elements.form.addEventListener('submit', event => { event.preventDefault(); createListing('active'); });
+document.querySelector('#ai-assist').addEventListener('click', async event => {
+  const button = event.currentTarget;
+  const title = elements.form.elements.title.value.trim();
+  const status = document.querySelector('#ai-status');
+  if (!title) {
+    status.textContent = 'Add an item title first.';
+    elements.form.elements.title.focus();
+    return;
+  }
+
+  const formData = new FormData(elements.form);
+  button.disabled = true;
+  button.innerHTML = '<span>✦</span> Drafting…';
+  status.textContent = 'Gemini is drafting copy from your item details…';
+  try {
+    const response = await fetch('/api/assist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData.entries()))
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'AI help is unavailable. Try again.');
+    elements.form.elements.title.value = result.title;
+    elements.form.elements.description.value = result.description;
+    status.textContent = 'Draft ready. Review every detail before saving.';
+    showToast('AI draft ready. Review and edit it before saving.');
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    button.disabled = false;
+    button.innerHTML = '<span>✦</span> Improve with AI';
+  }
+});
 elements.search.addEventListener('input', render);
 elements.sort.addEventListener('change', render);
 document.querySelector('#filter-button').addEventListener('click', () => { elements.filterRow.hidden = !elements.filterRow.hidden; });

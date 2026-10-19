@@ -1,0 +1,10 @@
+{
+  "name": "listnexus",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check app.js && node --check server.js && node --check test/server.test.js",
+    "test": "node --test"
+  }
+}
