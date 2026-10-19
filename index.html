@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Threadline — Your resale studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Threadline home"><span class="brand-mark">t<span>·</span></span><span>threadline</span></a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span>Overview</button>
+        <button class="nav-item" data-view="listings"><span class="nav-icon">▤</span>My listings<span class="nav-count" id="nav-count">0</span></button>
+        <button class="nav-item" data-view="drafts"><span class="nav-icon">◷</span>Drafts</button>
+        <button class="nav-item" data-view="sold"><span class="nav-icon">↗</span>Sold</button>
+      </nav>
+      <div class="side-divider"></div>
+      <div class="workspace-label">CHANNELS</div>
+      <div class="channel-list">
+        <div class="channel"><span class="channel-dot ebay">e</span>eBay</div>
+        <div class="channel"><span class="channel-dot posh">P</span>Poshmark</div>
+        <div class="channel"><span class="channel-dot depop">d</span>Depop</div>
+        <div class="channel"><span class="channel-dot mercari">m</span>Mercari</div>
+      </div>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-note"><span class="note-spark">✳</span><div><strong>Your resale studio</strong><p>One closet, all your channels.</p></div></div>
+      <div class="profile"><div class="avatar">A</div><div class="profile-copy"><strong>Alex Morgan</strong><span>Personal closet</span></div><button class="more-button" aria-label="Account options">···</button></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobile-menu" aria-label="Open navigation">☰</button>
+        <div class="breadcrumbs"><span>Workspace</span><span class="crumb-slash">/</span><strong id="breadcrumb-current">Overview</strong></div>
+        <div class="topbar-actions"><span class="sync-label"><i></i> Saved on this device</span><button class="button button-primary button-small" id="add-listing-top"><span>＋</span> New listing</button></div>
+      </header>
+
+      <section class="page-content">
+        <div class="welcome-row"><div><div class="eyebrow">MONDAY, OCTOBER 19</div><h1 id="page-title">Good morning, Alex <span class="wave">✳</span></h1><p class="page-subtitle" id="page-subtitle">Here's what's happening with your closet today.</p></div><button class="button button-primary" id="add-listing"><span>＋</span> Create a listing</button></div>
+
+        <section class="stats-grid" aria-label="Closet statistics">
+          <article class="stat-card"><div class="stat-top"><span>Active listings</span><span class="stat-icon lilac">▤</span></div><div class="stat-number" id="stat-active">0</div><div class="stat-foot"><span class="stat-neutral">Across all channels</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Potential earnings</span><span class="stat-icon mint">＄</span></div><div class="stat-number" id="stat-earnings">$0</div><div class="stat-foot"><span class="stat-neutral">If everything sells</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Items sold</span><span class="stat-icon peach">↗</span></div><div class="stat-number" id="stat-sold">0</div><div class="stat-foot"><span class="stat-neutral">Nice work, keep it up</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Needs attention</span><span class="stat-icon yellow">✳</span></div><div class="stat-number" id="stat-drafts">0</div><div class="stat-foot"><span class="stat-neutral">Drafts ready to finish</span></div></article>
+        </section>
+
+        <section class="listings-panel">
+          <div class="panel-heading"><div><div class="section-kicker">YOUR CLOSET</div><h2 id="list-heading">Recent listings</h2></div><button class="text-button" id="view-all">View all listings <span>→</span></button></div>
+          <div class="toolbar"><label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Search your closet..." aria-label="Search listings"></label><div class="toolbar-right"><select id="sort-select" aria-label="Sort listings"><option value="recent">Recently added</option><option value="price-high">Price: high to low</option><option value="price-low">Price: low to high</option><option value="name">Name: A to Z</option></select><button class="filter-button" id="filter-button">☷ <span>Filter</span></button></div></div>
+          <div class="filter-row" id="filter-row" hidden><button class="filter-chip selected" data-filter="all">All items</button><button class="filter-chip" data-filter="active">Active</button><button class="filter-chip" data-filter="draft">Drafts</button><button class="filter-chip" data-filter="sold">Sold</button></div>
+          <div class="table-wrap"><table><thead><tr><th class="item-heading">ITEM</th><th>STATUS</th><th>LISTED ON</th><th>PRICE</th><th></th></tr></thead><tbody id="listing-rows"></tbody></table><div class="empty-state" id="empty-state" hidden><div class="empty-art">✳</div><h3>Your closet starts here</h3><p>Add your first item and get it ready to list across your favorite marketplaces.</p><button class="button button-primary" id="empty-add">＋ Create your first listing</button></div></div>
+          <div class="table-footer"><span id="result-count">Showing 0 items</span><span class="footer-tip"><span>✦</span> Good photos help your listings sell faster</span></div>
+        </section>
+        <footer class="page-footer">Made for the love of a second life <span>✳</span></footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header"><div><div class="section-kicker">ADD TO YOUR CLOSET</div><h2 id="modal-title">Create a listing</h2></div><button class="close-button" id="close-modal" aria-label="Close">×</button></div>
+      <form id="listing-form">
+        <label class="field-label">What are you selling?<input name="title" required maxlength="90" placeholder="e.g. Vintage leather jacket"></label>
+        <div class="form-grid"><label class="field-label">Brand<input name="brand" maxlength="50" placeholder="e.g. Levi's"></label><label class="field-label">Category<select name="category"><option>Clothing</option><option>Shoes</option><option>Bags</option><option>Accessories</option><option>Home</option><option>Other</option></select></label></div>
+        <div class="form-grid"><label class="field-label">Size<input name="size" maxlength="24" placeholder="e.g. M, 8, One size"></label><label class="field-label">Condition<select name="condition"><option>Like new</option><option>New with tags</option><option>Good</option><option>Fair</option></select></label></div>
+        <label class="field-label">Price<input name="price" required type="number" min="0.01" step="0.01" placeholder="0.00"><span class="field-hint">Set your asking price in USD.</span></label>
+        <fieldset class="channel-picker"><legend>Prepare for marketplaces</legend><p>Choose where you plan to list this item.</p><div class="channel-options"><label><input type="checkbox" name="channels" value="eBay" checked><span class="channel-dot ebay">e</span> eBay</label><label><input type="checkbox" name="channels" value="Poshmark" checked><span class="channel-dot posh">P</span> Poshmark</label><label><input type="checkbox" name="channels" value="Depop"><span class="channel-dot depop">d</span> Depop</label><label><input type="checkbox" name="channels" value="Mercari"><span class="channel-dot mercari">m</span> Mercari</label></div></fieldset>
+        <div class="modal-footer"><button class="button button-quiet" type="button" id="save-draft">Save as draft</button><button class="button button-primary" type="submit">Save listing <span>→</span></button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
